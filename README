@@ -1,0 +1,8 @@
+Essentially this is just a rehash from RL5D's version of an Alexloop tuner, but I wanted to add some bits and design the android app to something more like I wanted and hopefully in future put a voltage monitor on the app.
+
+Instead of using a 9v battery, there is a Li-Ion to 5v boost converter/charger powering the whole thing, as well as some LED's to monitor the steps during debugging.
+This then allows easy charging of the battery through microusb and reprogramming through miniusb on the Arduino Nano.
+
+Included is the arduino script, compiled APK and the MIT App inventor source so you should be able to import that to your own account and do whatever changes you want.
+
+Enjoy :)
