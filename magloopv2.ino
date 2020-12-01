@@ -3,6 +3,7 @@ SoftwareSerial BTserial(2, 3); // RX | TX
 
 unsigned int raw=0;
 float volt=0.0;
+float ARef = 1.1;
 
 #define IN1  8
 #define IN2  9
@@ -21,6 +22,9 @@ unsigned long currentMillis ;
 int steps_left=movesteps;
 int steps_left1=movesteps1;
 
+long previousMillis = 0;
+long interval = 1000;
+
 long time1;
 
 void setup()
@@ -32,7 +36,10 @@ pinMode(IN3, OUTPUT);
 pinMode(IN4, OUTPUT); 
 motoroff();
 pinMode(A0, INPUT);
-BTserial.begin(9600);  
+BTserial.begin(9600); 
+
+analogReference(INTERNAL);
+ 
 }
 
 void loop()
@@ -44,6 +51,8 @@ void loop()
   if (blueToothVal=='F')
   {
   stepforward();
+  motoroff();
+
 //    Serial.println("step forward");
   }
 
@@ -51,18 +60,24 @@ void loop()
   {
   stepbackward();
   //  Serial.println("step back");
+  motoroff();
+
   }
   
   if (blueToothVal=='G')
   {
   forward();
   //Serial.println("forward");
+  motoroff();
+
   }
   
   if (blueToothVal=='N')
   {
   backward();
   //    Serial.println("backward");
+  motoroff();
+
   }
 
   if (blueToothVal=='X')
@@ -72,6 +87,12 @@ void loop()
   }
     
  // delay(5);
+
+unsigned long currentMillis = millis();
+if(currentMillis - previousMillis > interval) {
+ volts();
+  previousMillis = currentMillis;
+}
   }
 
 void stepforward(){
@@ -203,9 +224,12 @@ if(Steps<0){Steps=3; }
 }
 
 void volts(){
-raw = analogRead(A0);
-volt=raw/1023.0;
-volt=volt*4.2;
-String v=String(volt);// change float into string
-//Serial.println(volt);
+float raw = analogRead(A0);
+
+float x = raw/1023;
+float volt = x*ARef*4.26;
+//String v=String(volt);// change float into string
+BTserial.print(volt);
+BTserial.println("V");
+
 }
